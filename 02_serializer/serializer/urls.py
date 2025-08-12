@@ -1,15 +1,17 @@
 from django.urls import path, include
-from .views import CompanyView,CompanyDataView
+from .views import CompanyView ,CompanyDataView
 urlpatterns = [
-    path("company/",CompanyView.as_view(), name="company-create"),
+    # POST API FOR COMPANY
+    path("company/",CompanyView.as_view(),name="Company-create"),
+    # GET
     path("companyGET/<int:pk>/",CompanyView.as_view(), name="company-get"),
 
-    # POST API FOR COMPANY DATA
-    path("companydata/", CompanyDataView.as_view(), name="companydata-create"),
+    # PUT 
+    path("companyPUT/<int:pk>/",CompanyView.as_view(),name="company-put"),
+    # DELETE
+    path("companyDELETE/<int:pk>/",CompanyView.as_view(),name="company_delete"),
 
-    # GET API FOR COMPANY DATA
-    path("companydataGET/<int:pk>/",CompanyDataView.as_view(), name="companydata-get"),
-    
-    # PUT API FOR COMPANY DATA
-    path("companydataPUT/<int:pk>/",CompanyDataView.as_view(),name = "companydata-put")
+    # API FOR COMPANY DATA
+    path("companydata/", CompanyDataView.as_view(), name="companydata-create"),
+    path("companydata/<int:pk>/",CompanyDataView.as_view(), name="companydata-get"),
 ]

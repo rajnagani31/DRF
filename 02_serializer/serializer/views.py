@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListCreateAPIView
 
 from rest_framework.response import Response
-from rest_framework import status
-from .serializer import CompanydataSerializer, companySerializer
-from .models import company, Companydata
+from rest_framework import status ,generics
+from .serializer import CompanydataSerializer, companySerializer ,BookSerializer
+from .models import company, Companydata ,BookData
 # Create your views here.
 class CompanyView(APIView):
     def post(self,request):
@@ -76,6 +76,7 @@ class CompanyDataView(APIView):
         return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
     
     def get(self,request,pk = None):
+        " This API give only PK(user id) data"
         if pk:
             user= Companydata.objects.filter(id=pk).exists()
             if user:
@@ -90,6 +91,13 @@ class CompanyDataView(APIView):
                 
             return Response({"message":"User Does not exists "},status.HTTP_400_BAD_REQUEST)
         return Response({"ERROR":"ID Note found!!"},status.HTTP_400_BAD_REQUEST)
+    
+    def get(self,request):
+        " This API give all Comapny data"
+        user = Companydata.objects.all()
+        serializer = CompanydataSerializer(user , many =True)
+        return Response(serializer.data,status.HTTP_200_OK)
+    
 
     def patch(self,request,pk):
         if pk:
@@ -108,11 +116,38 @@ class CompanyDataView(APIView):
             else:
                 return Response({"message":"User Id does not exists"},status.HTTP_400_BAD_REQUEST)   
 
-    def delete(self,request,pk):
-        if pk:
-            user= Companydata.objects.filter(id=pk)
-            if not user.exists():
+    def delete(self,request):
+        pk = request.query_params.get('id')
+        user= Companydata.objects.filter(pk=pk)
+        if not user.exists():
                 return Response({"message":"user don't exists"},status.HTTP_400_BAD_REQUEST)
-            user.delete()
-            return Response({"message":"User deleted"},status.HTTP_204_NO_CONTENT)
+        user.delete()
+        return Response({"message":"User deleted"},status.HTTP_204_NO_CONTENT)
 
+class BookDataAPI(APIView):
+    def post(self , request):
+        serializer = BookSerializer(data = request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status.HTTP_201_CREATED)
+        return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
+    
+    def get(self,request):
+        data = BookData.objects.values("title","author","isbn","published_date","price",'read','date_time').all()
+        # print(data.get('title'))
+        # data= None
+        if not data:
+            return Response(
+                {
+                    "Message":"Data Note Found",
+                    "status":status.HTTP_404_NOT_FOUND
+                }
+            )
+        return Response(
+            {
+            "Book Data":data,
+            "status":status.HTTP_200_OK 
+        }
+        )
+    

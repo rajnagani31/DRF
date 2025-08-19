@@ -28,3 +28,27 @@ class UserTicket(models.Model):
 
     class Meta:
         db_table = 'UserTicket'
+
+
+
+class Courese(models.Model):
+    name = models.CharField(max_length=100 , blank=False ,null=False)
+    def __str__(self):
+        return self.name
+
+class Student(models.Model):
+    name = models.CharField(max_length=100 , blank=False ,null=False)
+    roll= models.IntegerField(unique=True)
+    course = models.ManyToManyField("Courese")
+
+
+####### 1NF 
+class Order(models.Model):
+    customer_name = models.CharField(max_length=100)
+    def __str__(self):
+        return self.customer_name
+    
+class Product(models.Model):
+    order = models.ForeignKey(Order, related_name='products', on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    user = models.CharField(max_length=100 ,null= True)

@@ -1,7 +1,8 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework.decorators import api_view
-from .serializer import UserTicketSerializer
-from .models import UserTicket
+from .serializer import UserTicketSerializer , StudentSerializer
+from .models import UserTicket , Student , Product
 from rest_framework.response import Response
 from rest_framework import status
 # Create your views here.`
@@ -57,3 +58,29 @@ def UserTicketAPI(request , pk=None):
                 return Response({"Data":"Your Ticket Deleted Success Fully"},status.HTTP_204_NO_CONTENT)
             return Response({"error":"Data Not Found"},status.HTTP_404_NOT_FOUND)
         return Response({"error":"ID Not Found"},status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def GetStudentData(request ,pk):
+    if request.method == 'GET':
+        user = Student.objects.filter(pk=pk).exists()
+        if user:
+            instance = Student.objects.get(id=pk)
+            serializer = StudentSerializer(instance)
+            print(serializer.data)                
+            return Response(
+                {
+                    "status":status.HTTP_200_OK,
+                    "data":serializer.data
+                }
+            )
+        return Response({"ERROR":"User Does not exsist"} , status.HTTP_400_BAD_REQUEST)
+@api_view(['GET'])
+def Products(request,pk):
+    if pk:
+        user = Product.objects.filter(pk=pk).exists()
+        if user:
+            data = Product.objects.filter(user='a')
+            all_data = data.values('order').all()
+            print(all_data)
+            return HttpResponse("ok")
+            # serializer = StudentSerializer(user)

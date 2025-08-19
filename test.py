@@ -84,27 +84,8 @@ data={
       }
     }
   ],
-  "logs": [
-    {
-      "level": "error",
-      "message": "Database connection failed",
-      "context": {
-        "retryCount": 3,
-        "lastTried": "2025-08-17T22:15:00Z",
-        "errors": [
-          {"code": "ECONNREFUSED", "at": {"host": "192.168.1.10", "port": 5432}},
-          {"code": "ETIMEOUT", "at": {"host": "192.168.1.11", "port": 5432}}
-        ]
-      }
-    },
-    {
-      "level": "info",
-      "message": "System started",
-      "context": {}
-    }
-  ],
-  "extra": [
-    "simple string",
+  "logs": [{"level": "error","message": "Database connection failed","context": {"retryCount": 3,"lastTried": "2025-08-17T22:15:00Z","errors": [{"code": "ECONNREFUSED", "at": {"host": "192.168.1.10", "port": 5432}},{"code": "ETIMEOUT", "at": {"host": "192.168.1.11", "port": 5432}}]}},{"level": "info","message": "System started","context": {}}],
+  "extra": ["simple string",
     123,
     "true",
     "null",
@@ -113,4 +94,5 @@ data={
 }
 
 
-print(data["logs"]["level"])
+print(data["logs"][0]["level"])
+print(data["logs"][1]["message"])

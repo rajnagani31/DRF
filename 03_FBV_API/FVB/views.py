@@ -1,8 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework.decorators import api_view
-from .serializer import UserTicketSerializer , StudentSerializer
-from .models import UserTicket , Student , Product
+from .serializer import UserTicketSerializer , StudentSerializer ,BookOrderSerializer
+from .models import UserTicket , Student , Product ,BookOrder
 from rest_framework.response import Response
 from rest_framework import status
 # Create your views here.`
@@ -84,3 +84,17 @@ def Products(request,pk):
             print(all_data)
             return HttpResponse("ok")
             # serializer = StudentSerializer(user)
+
+@api_view(['GET'])
+def GetUserItemsData(request,pk):
+    # customer_name = request.query_params.get('Customer_name_id')            
+    # print(customer_name)
+    book_items = BookOrder.objects.filter(Customer_name_id=pk).values('Items_id').all()
+    serializer = BookOrderSerializer(book_items,many=True)
+    print(serializer.data)
+    print(book_items)
+    return Response({
+        "data":serializer.data,
+        "status":status.HTTP_200_OK
+    
+        })

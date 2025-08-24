@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import AbstractUser
 # Create your models here.
 class Country(models.Model):
     Country = models.CharField(max_length = 100 , blank= False , null= False)
@@ -52,3 +52,23 @@ class Product(models.Model):
     order = models.ForeignKey(Order, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     user = models.CharField(max_length=100 ,null= True)
+
+####### 2NF
+
+class Customer(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+class Items(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    def __str__(self):
+        return self.name
+
+class BookOrder(models.Model):
+    price = models.IntegerField()
+    Customer_name = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    Items = models.ForeignKey(Items,on_delete=models.CASCADE)
+

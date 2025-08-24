@@ -29,3 +29,16 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['id','order','name']    
+
+@admin.register(Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ['id','name']
+
+@admin.register(Items)
+class ItemsAdmin(admin.ModelAdmin):
+    list_display = ['id','name']
+
+@admin.register(BookOrder)
+class BookOrderAdmin(admin.ModelAdmin):
+    list_display = ['id','price','Customer_name','Items']    
+    

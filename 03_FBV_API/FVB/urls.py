@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UserTicketAPI ,GetStudentData ,Products
+from .views import UserTicketAPI ,GetStudentData ,Products,GetUserItemsData
 
 urlpatterns = [
     path("user-data/",UserTicketAPI ,name ='user data'),
@@ -10,4 +10,6 @@ urlpatterns = [
     # product api
     path("product/<int:pk>/",Products,name="product data"),
 
+    # orderd Book API
+    path("GetUserItemsData/<int:pk>/",GetUserItemsData,name="Get User Items Data")
 ]

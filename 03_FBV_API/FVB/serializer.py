@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from .models import UserTicket ,Student
+from .models import UserTicket ,Student,BookOrder
 
 class UserTicketSerializer(ModelSerializer):
     class Meta:
@@ -13,3 +13,8 @@ class StudentSerializer(ModelSerializer):
         model = Student
         fields = ['id','name','roll','course']
         # read_only_fields = ['course']
+
+class BookOrderSerializer(ModelSerializer):
+    class Meta:
+        model = BookOrder
+        fields = ['Customer_name_id','Items_id']        

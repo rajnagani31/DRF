@@ -1,4 +1,5 @@
 from rest_framework.response import Response
+from django.core.mail import send_mail
 
 
 class SerlizerValidation:
@@ -19,3 +20,27 @@ class SerlizerValidation:
             **kwargs
         }
         return Response(status=status ,data= response_data)
+    
+
+
+class EmailUtils:
+    @staticmethod
+    def send_email(subject, message, recipient_list, html_message=None):
+        try:
+            email_from = "rajnagani3131@gmail.com"
+            send_mail(subject, message, email_from,recipient_list, html_message=None)
+            return True
+        except Exception as e:
+            print(str(e))
+            return False
+
+    @staticmethod
+    def welcom_email(email,firstname):
+        subject = f"Welcome To With JWT"
+        message =f"""
+            Welcom to JWT {firstname} 
+
+            You face any Problem so you send mail here
+"""
+        recipient_list =[email]
+        return EmailUtils.send_email(subject , message,recipient_list)

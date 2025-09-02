@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from .utils import SerlizerValidation,EmailUtils
 import re
+from django.contrib.auth.hashers import make_password ,check_password
 # Create your views here.
 class UserRegisterView(APIView ,SerlizerValidation ,EmailUtils):
 
@@ -65,11 +66,14 @@ class Login(APIView,SerlizerValidation):
             print(f"Email:{email} {password}")
 
             user_cheak = UserDetails.objects.filter(email= email ,is_delete = False).first()
+
             if not user_cheak:
                 return self.return_response(status.HTTP_401_UNAUTHORIZED,'first register to login')
                 # return Response({"message":"first register to login","status":status.HTTP_401_UNAUTHORIZED})
-
+            if not check_password(password , user_cheak.password):
+                return self.return_response(status.HTTP_401_UNAUTHORIZED ,'plese enter curreact password')
             access_token = AccessToken.for_user(user_cheak)
+            
             data_ = {
                 "data":
                     {   
@@ -84,7 +88,6 @@ class Login(APIView,SerlizerValidation):
         except Exception as e:
             return Response({"message":str(e)})
 
-from django.contrib.auth.hashers import make_password
 
 class ChangePassword(APIView,SerlizerValidation):
     permission_classes =[IsAuthenticated]
@@ -94,24 +97,27 @@ class ChangePassword(APIView,SerlizerValidation):
 
         print(user_id)
         new_password= request.data.get('new_password')
-        confirm_password = request.data.get('confirm_password')
+        confirm_password = request.data.get('confirm_password') 
 
         if not all([new_password,confirm_password]):
             return self.return_response(status.HTTP_400_BAD_REQUEST , "Plese enter a both field")
         
-        password_pattern = re.compile(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^~+=\(\)\-])[A-Za-z\d@$!%*?&#^~+=\(\)\-]{8,25}$")
-        if not password_pattern.match(new_password):
-            return self.return_response(status.HTTP_400_BAD_REQUEST ,"password must be 8-25 characters long , contain at least one uppercase letter one lowercase letter and one digit are required")
+        # password_pattern = re.compile(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^~+=\(\)\-])[A-Za-z\d@$!%*?&#^~+=\(\)\-]{8,25}$")
+        # if not password_pattern.match(new_password):
+        #     return self.return_response(status.HTTP_400_BAD_REQUEST ,"password must be 8-25 characters long , contain at least one uppercase letter one lowercase letter and one digit are required")
         
         if confirm_password != new_password:
             return self.return_response(status.HTTP_400_BAD_REQUEST ,"password and Confir password do not match !")
         
         if user_id:
             new = new_password
+            print('new',new)
             data=UserDetails.objects.filter(pk=user_id , is_delete = False).first()
             if not data:
                 return Response({"message":"Id not found"} ,status.HTTP_404_NOT_FOUND)
             data.password = make_password(new)
+            # data.password = new
+
             data.save()
             print(data)
             # data.save()

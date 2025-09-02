@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'rest_framework',
     'rest_framework_simplejwt',
-    "drf_yasg",
     'user',
 ]
 
@@ -80,6 +79,9 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "Auth2",
         "USER": "postgres",
+
+
+        
         "PASSWORD": "1234",
         "HOST": "localhost",
         "PORT": "5432",

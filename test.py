@@ -1,3 +1,5 @@
+from httpresponse import Http
+
 nums =[1,2,3,4]
 
 n =5
@@ -45,3 +47,7 @@ a= ord('A')
 z =ord('Z')
 for i in range(a,z):
     print((i))
+
+
+def request():
+    return Http

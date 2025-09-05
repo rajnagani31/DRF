@@ -1,7 +1,8 @@
 
 from django.urls import path,include
-from .views import UserRegisterView , Login ,ChangePassword
+from .views import *
 from rest_framework import routers
+from .sse import *
 
 
 urlpatterns = [
@@ -10,4 +11,11 @@ urlpatterns = [
 
     path('password/<int:pk>/',ChangePassword.as_view(), name='password'),
     path('delete/',ChangePassword.as_view(),name='delete'),
+    # SSE
+    path('getsse/',SSEAPI.as_view(),name='sseapi'),
+    path('triger/',SSETriger.as_view(),name = 'triger'),
+    
+    # currency 
+    path('currency/',Currencydata.as_view(),name='currencydata'),
+    path('useraddlist/',UserAddListView.as_view(),name='useraddlist'),
 ]

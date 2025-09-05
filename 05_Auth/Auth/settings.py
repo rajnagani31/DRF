@@ -128,9 +128,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     )
 }
-SIMPLE_JWT =    {
-    "ACCESS_TOKEN_LIFETIME":timedelta(minutes=15),
-}
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = 'user.UserDetails'
 
@@ -141,3 +139,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'rajnagani331@gmail.com'
 EMAIL_HOST_PASSWORD = 'jvfu rpjv pyod tqdj'
+
+SIMPLE_JWT =    {
+    "ACCESS_TOKEN_LIFETIME":timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME":timedelta(seconds=60),
+}

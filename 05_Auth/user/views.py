@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
-from .models import UserDetails
-from .serializer import UserRegisterSerializer ,LoginSerializer
+from .models import UserDetails , Notification,Currency,UserAddList
+from .serializer import UserRegisterSerializer ,LoginSerializer ,NotificationSerializer,currencySerializer,userAddListSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework.response import Response
@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from .utils import SerlizerValidation,EmailUtils
 import re
 from django.contrib.auth.hashers import make_password ,check_password
+from rest_framework.generics import CreateAPIView
 # Create your views here.
 class UserRegisterView(APIView ,SerlizerValidation ,EmailUtils):
 
@@ -72,15 +73,18 @@ class Login(APIView,SerlizerValidation):
                 # return Response({"message":"first register to login","status":status.HTTP_401_UNAUTHORIZED})
             if not check_password(password , user_cheak.password):
                 return self.return_response(status.HTTP_401_UNAUTHORIZED ,'plese enter curreact password')
+            # Token Genrate
             access_token = AccessToken.for_user(user_cheak)
-            
+            refresh_token = RefreshToken.for_user(user_cheak)
             data_ = {
                 "data":
                     {   
                         "user_id":user_cheak.id,
                         "message":"login successful",
                         "status": status.HTTP_200_OK,
-                        "jwt_token":str(access_token),}
+                        "jwt_access_token":str(access_token),
+                        "jwt_refresh_token":str(refresh_token),
+                        }
             }
             # return Response({"message":"login successfull","status":status.HTTP_200_OK ,"data":data_})
             # return self.return_response(status.HTTP_200_OK , "Login successful.",data=data_)
@@ -136,3 +140,27 @@ class ChangePassword(APIView,SerlizerValidation):
         user.is_delete = True
         user.save()
         return self.return_response(status.HTTP_200_OK,"Your account succesfully deleted")
+    
+
+class Currencydata(CreateAPIView):
+    queryset = Currency.objects.all()
+    serializer_class = currencySerializer
+
+
+
+class UserAddListView(APIView ,SerlizerValidation):
+    # permission_classes = [IsAuthenticated]
+    def post(self,request):
+        serializer = userAddListSerializer(data = request.data)
+        data = request.data.get("message", "no message provided")
+        self.messages.append(data)
+        if not serializer.is_valid():
+            return self.return_response(status.HTTP_400_BAD_REQUEST ,"Invalid data",data=serializer.errors)
+        serializer.save()
+        return self.return_response(status.HTTP_201_CREATED ,"User Add List created successfully",data=serializer.data)
+    
+
+class ShowList(APIView,SerlizerValidation):
+    def post(self,request):
+        pass
+        

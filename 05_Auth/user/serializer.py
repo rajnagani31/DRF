@@ -1,5 +1,5 @@
 from rest_framework import serializers 
-from .models import UserDetails
+from .models import UserDetails , Notification,Currency,UserAddList
 import re
 from django.contrib.auth.hashers import make_password
 
@@ -34,3 +34,27 @@ class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserDetails
         fields =['email' , 'password']
+
+class NotificationSerializer(serializers.ModelSerializer):
+    message = serializers.CharField(required=True)
+    class Meta:
+        model = Notification
+        fields = ['message']        
+
+    def validate(self, data):
+        if not data.get('message'):
+            raise serializers.ValidationError({"message": "Message cannot be empty."})
+        return data
+    
+
+class currencySerializer(serializers.ModelSerializer):
+    name = serializers.CharField(max_length=100)
+    class Meta:
+        model = Currency
+        fields = ['name']    
+
+class userAddListSerializer(serializers.ModelSerializer):  
+    user_id = serializers.IntegerField(required=False)  
+    class Meta:
+        model = UserAddList
+        fields = ['user_id','Currency_accepted', 'Currency_of_payout']

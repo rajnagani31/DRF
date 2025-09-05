@@ -22,3 +22,36 @@ class UserDetails(AbstractUser):
 # After making changes to the models, run the following commands to apply migrations:
 # python manage.py makemigrations
 # python manage.py migrate
+
+class Currency(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    # code = models.CharField(max_length=10)
+    # symbol = models.CharField(max_length=10)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "Currency"
+
+class Notification(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    user = models.ForeignKey(UserDetails, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "Notification"
+
+class UserAddList(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    user = models.ForeignKey(UserDetails, on_delete=models.CASCADE, null=True , blank=True)
+    Currency_accepted = models.ForeignKey(Currency, on_delete=models.CASCADE)
+    Currency_of_payout = models.ForeignKey(Currency, related_name='payout_currency', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True ,null=True)
+    updated_at = models.DateTimeField(auto_now=True , null=True)
+
+    class Meta:
+        db_table = "User Add List"
+
+        

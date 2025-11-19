@@ -1,18 +1,19 @@
 from django.shortcuts import render
 from rest_framework import generics
 from .models import UserDetails , Notification,Currency,UserAddList
-from .serializer import UserRegisterSerializer ,LoginSerializer ,NotificationSerializer,currencySerializer,userAddListSerializer
+from .serializer import LimitOffsetPagination, UserRegisterSerializer ,LoginSerializer ,NotificationSerializer,currencySerializer,userAddListSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken   
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from django.contrib.auth.models import User
 from .utils import SerlizerValidation,EmailUtils
 import re
 from django.contrib.auth.hashers import make_password ,check_password
 from rest_framework.generics import CreateAPIView
-# Create your views here.
+from .serializer import Pagination
 class UserRegisterView(APIView ,SerlizerValidation ,EmailUtils):
 
     " registrtion API with TOKEN JWT"
@@ -113,7 +114,7 @@ class ChangePassword(APIView,SerlizerValidation):
         if confirm_password != new_password:
             return self.return_response(status.HTTP_400_BAD_REQUEST ,"password and Confir password do not match !")
         
-        if user_id:
+        if user_id: 
             new = new_password
             print('new',new)
             data=UserDetails.objects.filter(pk=user_id , is_delete = False).first()
@@ -159,8 +160,49 @@ class UserAddListView(APIView ,SerlizerValidation):
         serializer.save()
         return self.return_response(status.HTTP_201_CREATED ,"User Add List created successfully",data=serializer.data)
     
+""" Page number Pagination """
+class Getist(APIView,SerlizerValidation):
+    pagination = Pagination
 
-class ShowList(APIView,SerlizerValidation):
-    def post(self,request):
-        pass
+    def get(self,request):
+        " without serializer"
+
+        all_list = UserAddList.objects.values('id','user_id','Currency_accepted__name','Currency_of_payout__name','Currency_accepted__created_at').all()   
+        # all_list = False
+        print(all_list)
+        result_page = self.pagination.paginate_queryset(all_list,request)
+        if result_page:
+            return self.pagination.get_paginated_response(result_page)
+
+            # return self.return_response(status.HTTP_200_OK ,"All List",data=result_page)
+        return self.return_response(status.HTTP_404_NOT_FOUND ,"List not found")
         
+    "with serializer"
+    def get(self,request):
+        all_list = UserAddList.objects.all()
+        pagination = Pagination()
+        result_page = pagination.paginate_queryset(all_list,request)
+        serializer = userAddListSerializer(result_page, many=True)
+        # return self.return_response(status.HTTP_200_OK,"all data with serializer",serializer.data)
+        return pagination.get_paginated_response(serializer.data)
+    
+""" Limit Offset Pagination """
+
+class LimitOffsetPaginationView(ListAPIView,SerlizerValidation):
+    permission_classes = [IsAuthenticated]
+    queryset = UserAddList.objects.all()
+    serializer_class = userAddListSerializer
+    pagination_class = LimitOffsetPagination
+
+    def get(self,request):
+        user_id = request.user.id
+        print(user_id)
+        all_list = UserAddList.objects.filter(user_id=user_id).all()
+        user_data = all_list.all()
+        pagination = LimitOffsetPagination()
+        result_page = pagination.paginate_queryset(user_data,request)
+        serializer = userAddListSerializer(result_page, many = True)
+        print(serializer.data)
+        data = pagination.get_paginated_response(serializer.data)
+        return self.return_response(status.HTTP_200_OK ,"All data with limit offset pagination",data.data)
+

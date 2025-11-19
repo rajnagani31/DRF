@@ -17,5 +17,9 @@ urlpatterns = [
     
     # currency 
     path('currency/',Currencydata.as_view(),name='currencydata'),
+    # AddList
     path('useraddlist/',UserAddListView.as_view(),name='useraddlist'),
+    path('getlist/',Getist.as_view(),name='getlist'),
+    path('getlist-limit/',LimitOffsetPaginationView.as_view(),name='getlist-limit'),
+
 ]

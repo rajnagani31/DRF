@@ -43,7 +43,7 @@ class Notification(models.Model):
     class Meta:
         db_table = "Notification"
 
-class UserAddList(models.Model):
+class UserAddList(models.Model):    
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(UserDetails, on_delete=models.CASCADE, null=True , blank=True)
     Currency_accepted = models.ForeignKey(Currency, on_delete=models.CASCADE)

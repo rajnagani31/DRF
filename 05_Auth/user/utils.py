@@ -24,7 +24,7 @@ class SerlizerValidation:
 
 
 class EmailUtils:
-    @staticmethod
+    # @staticmaethod
     def send_email(subject, message, recipient_list, html_message=None):
         try:
             email_from = "rajnagani3131@gmail.com"

@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 # Create your models here.
 class Country(models.Model):
-    Country = models.CharField(max_length = 100 , blank= False , null= False)
+    Country = models.CharField(max_length = 100 , blank = False , null= False)
     state = models.CharField(max_length = 100 , blank= False , null= False)
     air_port_name = models.CharField(max_length=100 , blank=False , null=False)
     pin_code =  models.IntegerField(blank= True )

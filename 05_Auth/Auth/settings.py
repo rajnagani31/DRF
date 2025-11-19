@@ -85,6 +85,16 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "sleepy-plum-mink",
+#         "USER": "chipmunk",        
+#         "PASSWORD": "hO9_jS0=pK6=nQ7=dL7_",
+#         "HOST": "asia-east2-001.proxy.kinsta.app",
+#         "PORT": "30705",
+#     }
+# }
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -126,8 +136,14 @@ STATIC_URL = "static/"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    )
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,  # if not pass Number of items per page    
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 3,  # if use default limit if not passed in query
 }
+
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = 'user.UserDetails'
@@ -138,9 +154,10 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587   
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'rajnagani331@gmail.com'
-EMAIL_HOST_PASSWORD = 'jvfu rpjv pyod tqdj'
+EMAIL_HOST_PASSWORD = 'jvfu rpjv pyod tqdj'     
 
 SIMPLE_JWT =    {
-    "ACCESS_TOKEN_LIFETIME":timedelta(minutes=15),
+    "ACCESS_TOKEN_LIFETIME":timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME":timedelta(seconds=60),
 }
+

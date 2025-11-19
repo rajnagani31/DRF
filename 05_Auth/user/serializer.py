@@ -3,6 +3,19 @@ from .models import UserDetails , Notification,Currency,UserAddList
 import re
 from django.contrib.auth.hashers import make_password
 
+from rest_framework.pagination import PageNumberPagination , LimitOffsetPagination
+
+# pegination
+
+class Pagination(PageNumberPagination):
+    page_size = 10  # Number of items per page
+    page_size_query_param = 'page_size'
+    max_page_size = 10
+
+class LimitOffsetPagination(LimitOffsetPagination):
+    default_limit = 3 # Default number of items per page --> how many data show from per page if you don't pass limit they use setting.py limit
+    max_limit = 1 # This is Page limit 1,2,3,4,5...
+
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)

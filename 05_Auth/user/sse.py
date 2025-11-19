@@ -17,7 +17,7 @@ def event_stream():
             msg = messages.pop(0)
             yield f"data: {msg}\n\n"
 
-        # yield "event: heartbeat\ndata: keep-alive\n\n"
+        yield "event: heartbeat\ndata: keep-alive\n\n"
         time.sleep(2)    
 
 # def event_stream():
@@ -27,7 +27,7 @@ def event_stream():
 
 class SSEAPI(APIView):
     " new sse API Endpoint"
-    permission_classes=[IsAuthenticated]
+    # permission_classes=[IsAuthenticated]
 
     def get(self,request):
         response = StreamingHttpResponse(event_stream(),content_type = "text/event-stream")

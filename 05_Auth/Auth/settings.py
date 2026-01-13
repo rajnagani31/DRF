@@ -84,7 +84,16 @@ DATABASES = {
         "PORT": "5432",
     }
 }
-
+DATABASES = {
+    "default":{
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME":"Auth3",
+        "USER":"postgres",
+        "PASSWORD":"1234",
+        "HOST":"localhost",
+        "PORT":"5432"
+    }
+}
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.postgresql",

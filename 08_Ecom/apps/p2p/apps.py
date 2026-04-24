@@ -7,4 +7,4 @@ class P2PConfig(AppConfig):
     label = "p2p"
 
     def ready(self) -> None:
-        pass
+        import apps.p2p.signals

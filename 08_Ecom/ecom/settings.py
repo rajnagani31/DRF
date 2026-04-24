@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.p2p.apps.P2PConfig',
     'apps.products.apps.ProductsConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
